@@ -4,6 +4,7 @@ var path = require('path');
 var logger = require('morgan');
 
 const cors=require('cors');
+const mongoose=require('mongoose');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -16,6 +17,17 @@ var app = express();
 app.use(logger('dev'));
 
 app.use(cors());
+mongoose.connect('mongodb://localhost/Shopping-API',{useNewUrlParser:true , useUnifiedTopology: true},(err,result)=>{
+  if(err){
+    console.log(err)
+    return
+  }
+  else{
+    console.log("connect to DB")
+  }
+});
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
