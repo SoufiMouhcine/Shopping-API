@@ -49,9 +49,6 @@ router.post('/signup', (req, res, next) => {
       })
     })
 
-
-
-
 });
 
 
@@ -66,9 +63,9 @@ router.get('/signin', (req, res, next) => {
                 message: 'you are sign in'
               })
             }
-            else{
+            else {
               res.status(404).json({
-                message:'wrong passwrod'
+                message: 'wrong passwrod'
               })
             }
           })
@@ -90,7 +87,63 @@ router.get('/signin', (req, res, next) => {
         message: err
       })
     })
+});
+
+
+router.put('/:id', (req, res, next) => {
+  bcrypt.hash(req.body.password, 10)
+    .then(hash => {
+      const user = {
+        username: req.body.username,
+        password: hash
+      }
+      User.findOneAndUpdate({ _id: req.params.id }, { $set: user })
+        .then(result => {
+          if (result) {
+            res.status(200).json({
+              message: "user updated with success",
+            })
+          }
+          else {
+            res.status(404).json({
+              message: 'user not found'
+            })
+          }
+        })
+        .catch(err => {
+          res.status(404).json({
+            message: err
+          })
+        })
+    })
+    .catch(err => {
+      res.status(404).json({
+        message: err
+      })
+    })
+});
+
+router.delete('/:id', (req, res, next) => {
+  User.findOneAndDelete({ _id: req.params.id })
+    .then(result => {
+      if (result) {
+        res.status(200).json({
+          message: 'user deleted with success'
+        })
+      }
+      else {
+        res.status(200).json({
+          message: 'user not found'
+        })
+      }
+    })
+    .catch(err => {
+      res.status(404).json({
+        message: err
+      })
+    })
 })
+
 
 router.get('/', (req, res, next) => {
   const users = User.find({}, 'username password')
