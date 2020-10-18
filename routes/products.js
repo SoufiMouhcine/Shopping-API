@@ -75,9 +75,8 @@ router.put('/:id', (req, res, next) => {
                     product.name = result.name
                 }
                 console.log(product)
-                Product.findByIdAndUpdate({ _id: req.params.id }, { $set: product })
+                Product.update({ _id: req.params.id }, { $set: product })
                     .then(result => {
-                        console.log(result)
                         res.status(200).json({
                             message: 'product was updated successfuly'
                         })
