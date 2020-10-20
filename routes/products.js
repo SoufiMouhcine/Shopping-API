@@ -1,12 +1,30 @@
 var express = require('express');
 var router = express.Router();
-const Product = require('../models/Product')
+const Product = require('../models/Product');
+const multer=require('multer');
+const storage=multer.diskStorage({
+    destination:function(req,file,cb){
+        cb(null,'./productImg')
+    },
+    filename:function(req,file,cb){
+        cb(null,new Date().toDateString()+""+file.originalname)
+    }
+})
+const upload=multer({
+    storage:storage,
+    limits:{
+        fileSize:1024*1024*5
+    }
+});
+
 
 // Ajouter nouveau produit
-router.post('/', (req, res, next) => {
+router.post('/',upload.single('img'),(req, res, next) => {
+    console.log(req.file);
     const product = new Product({
         name: req.body.name,
-        price: req.body.price
+        price: req.body.price,
+        img:req.file.path
     })
 
     product.save()

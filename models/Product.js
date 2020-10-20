@@ -8,6 +8,10 @@ const ProdcutSchema=mongoose.Schema({
     price:{
         type:String,
         required:true
+    },
+    img:{
+        type:String,
+        required:true
     }
 });
 
